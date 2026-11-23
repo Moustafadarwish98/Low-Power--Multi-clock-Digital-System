@@ -1,0 +1,126 @@
+# ----------------------------------------------------------------------
+# Formality Setup File
+# ----------------------------------------------------------------------
+set synopsys_auto_setup true
+
+set_svf "/home/IC/Projects/System/Backend/Synthesis/SYS_TOP.svf"
+# ----------------------------------------------------------------------
+# Search PATH
+# ----------------------------------------------------------------------
+lappend search_path /home/IC/tsmc_fb_cl013g_sc/aci/sc-m/synopsys
+
+lappend search_path /home/IC/Projects/System/Backend_RTL/16_bit_ALU
+lappend search_path /home/IC/Projects/System/Backend_RTL/Asynchronous_FIFO
+lappend search_path /home/IC/Projects/System/Backend_RTL/Clock_Divider
+lappend search_path /home/IC/Projects/System/Backend_RTL/Clock_Divider_Mux
+lappend search_path /home/IC/Projects/System/Backend_RTL/Clock_gating
+lappend search_path /home/IC/Projects/System/Backend_RTL/Data_Synchronizer
+lappend search_path /home/IC/Projects/System/Backend_RTL/Pulse_gen
+lappend search_path /home/IC/Projects/System/Backend_RTL/RegFile
+lappend search_path /home/IC/Projects/System/Backend_RTL/Reset_Synchronizer
+lappend search_path /home/IC/Projects/System/Backend_RTL/System_control
+lappend search_path /home/IC/Projects/System/Backend_RTL/System_Wrapper
+lappend search_path /home/IC/Projects/System/Backend_RTL/UART
+lappend search_path /home/IC/Projects/System/Backend_RTL/UART_RX
+lappend search_path /home/IC/Projects/System/Backend_RTL/UART_TX
+
+set SSLIB "/home/IC/tsmc_fb_cl013g_sc/aci/sc-m/synopsys/scmetro_tsmc_cl013g_rvt_ss_1p08v_125c.db"
+set TTLIB "/home/IC/tsmc_fb_cl013g_sc/aci/sc-m/synopsys/scmetro_tsmc_cl013g_rvt_tt_1p2v_25c.db"
+set FFLIB "/home/IC/tsmc_fb_cl013g_sc/aci/sc-m/synopsys/scmetro_tsmc_cl013g_rvt_ff_1p32v_m40c.db"
+
+# ----------------------------------------------------------------------
+# Reference Container
+# ----------------------------------------------------------------------
+read_db -container Ref [list $SSLIB $TTLIB $FFLIB]
+
+## Read Reference Design Files 
+
+# ALU
+read_verilog -container Ref "ALU_16b.v"
+
+# FIFO
+read_verilog -container Ref "FIFO_mem.v"
+read_verilog -container Ref "read_control.v"
+read_verilog -container Ref "write_control.v"
+read_verilog -container Ref "synchronizer.v"
+read_verilog -container Ref "FIFO_top.v"
+
+# Clocking
+read_verilog -container Ref "clk_div.v"
+read_verilog -container Ref "clk_div_mux.v"
+read_verilog -container Ref "clk_gating.v"
+
+# Synchronizers
+read_verilog -container Ref "data_sync.v"
+read_verilog -container Ref "reset_sync.v"
+read_verilog -container Ref "pulse_gen.v"
+
+# Register file
+read_verilog -container Ref "registerfile.v"
+
+# System control
+read_verilog -container Ref "system_control.sv"
+
+# UART RX
+read_verilog -container Ref "data_sampling.sv"
+read_verilog -container Ref "deserializer.v"
+read_verilog -container Ref "edge_bit_counter.v"
+read_verilog -container Ref "parity_check.v"
+read_verilog -container Ref "stop_check.v"
+read_verilog -container Ref "start_check.v"
+read_verilog -container Ref "FSM.sv"
+read_verilog -container Ref "UART_rx_top.v"
+
+# UART TX
+read_verilog -container Ref "UART_tx_top.sv"
+read_verilog -container Ref "FSM_tx.sv"
+read_verilog -container Ref "mux.v"
+read_verilog -container Ref "parity_calc.v"
+read_verilog -container Ref "serializer.v"
+
+# UART TOP
+read_verilog -container Ref "UART_top.v"
+
+# System TOP 
+read_verilog -container Ref "SYS_TOP.sv"
+
+# ----------------------------------------------------------------------
+# Set Reference Top
+# ----------------------------------------------------------------------
+set_reference_design SYS_TOP
+set_top SYS_TOP
+
+# ----------------------------------------------------------------------
+# Implementation Container
+# ----------------------------------------------------------------------
+read_db -container Imp [list $SSLIB $TTLIB $FFLIB]
+
+read_verilog -container Imp -netlist "/home/IC/Projects/System/Backend/Synthesis/netlists/SYS_TOP.v"
+
+set_implementation_design SYS_TOP
+set_top SYS_TOP
+
+# ----------------------------------------------------------------------
+# Match & Verify
+# ----------------------------------------------------------------------
+
+match
+set successful [verify]
+if {!$successful} {
+  diagnose
+  analyze_points -failing
+}
+
+# ----------------------------------------------------------------------
+# Reports
+# ----------------------------------------------------------------------
+file mkdir  logs
+file mkdir reports
+
+report_passing_points    > "reports/passing_points.rpt"
+report_failing_points    > "reports/failing_points.rpt"
+report_aborted_points    > "reports/aborted_points.rpt"
+report_unverified_points > "reports/unverified_points.rpt"
+
+start_gui
+

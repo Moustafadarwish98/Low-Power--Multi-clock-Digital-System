@@ -1,0 +1,37 @@
+// FIFO memory dual port RAM
+module FIFO_mem #(
+    parameter DATA_WIDTH = 8,
+    parameter DEPTH      = 8,
+    parameter ADDR_WIDTH = $clog2(DEPTH)
+  ) (
+    input  wire [DATA_WIDTH-1:0] w_data,
+    input  wire                  w_clk,
+    input  wire                  w_clk_en,
+    input  wire                  w_rstn,
+    input  wire [ADDR_WIDTH-1:0] w_addr,
+    input  wire [ADDR_WIDTH-1:0] r_addr,
+    output wire [DATA_WIDTH-1:0] r_data
+  );
+
+  // register file
+  reg [DATA_WIDTH-1:0] reg_file [0:DEPTH-1];
+  integer i;
+
+  // Write domain
+  always @(posedge w_clk or negedge w_rstn)
+  begin
+    if (!w_rstn)
+    begin
+      for (i = 0; i < DEPTH; i = i + 1)
+        reg_file[i] <= {DATA_WIDTH{1'b0}};
+    end
+    else if (w_clk_en)
+    begin
+      reg_file[w_addr] <= w_data;
+    end
+  end
+
+  // Read domain
+  assign r_data = reg_file[r_addr];
+
+endmodule

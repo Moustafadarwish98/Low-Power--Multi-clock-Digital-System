@@ -1,0 +1,43 @@
+******************************************************************************************************************
+LINT-1 (25 cells don’t drive any nets)
+
+These are internal gates/flops whose outputs were optimized away.
+
+******************************************************************************************************************
+ LINT-28 (unconnected port)
+Warning: In design 'data_sampling_00000006_8_0000000b', port 'prescale[0]' is not connected to any nets. (LINT-28)
+
+The LSB (prescale[0]) is unused in data_sampling.
+
+i use prescale >> 1 instead of prescale/2 (to avoid multipliers)
+
+That means bit[0] is always shifted out and never used.
+Synthesis sees prescale[0] as redundant → reports it as LINT-28 unconnected port.
+Not a problem as data sampling depends only on the middle bits of the prescale.
+******************************************************************************************************************
+
+LINT-31 (3 shorted outputs in clk_div_mux_WIDTH8)
+out[7] is connected directly to out[4]
+out[7] is connected directly to out[5]
+out[7] is connected directly to out[6]
+
+This means multiple mux outputs were tied together, happens because mux width is bigger than needed.
+But i kept it as the out of the clk div mux is the div ratio in clock divider block which is parameterized with default 8 bits. 
+
+******************************************************************************************************************
+VO-4: Verilog 'assign' or 'tran' statements are written out
+fix: set verilogout_no_tri true
+
+ LINT-32 (pins tied to constants)
+UART_tx_top_DATA_WIDTH8/dut_mux.start_bit = 0
+UART_tx_top_DATA_WIDTH8/dut_mux.stop_bit  = 1
+
+some mux select pins are tied to constant values.
+standard for start/stop bits → this is expected.
+******************************************************************************************************************
+LINT-52 (outputs tied to constants)
+clk_div_mux_WIDTH8/out[7:4] = 0
+system_controller/.../div_clk_enable = 1
+
+these outputs never change → tied  1  → this is expected. (div_clk_enable is always enabled)
+******************************************************************************************************************

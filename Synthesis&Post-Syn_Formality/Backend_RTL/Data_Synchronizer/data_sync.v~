@@ -1,0 +1,78 @@
+module data_sync #(
+    parameter NUM_STAGES = 2,
+    parameter BIT_WIDTH = 8
+  ) (
+    input wire [BIT_WIDTH - 1:0] unsync_bus, // Input data bus from source domain
+    input wire dest_clk,
+    input wire dest_reset_n,
+    input wire bus_enable,                  // Control signal (from source domain) 
+    output reg enable_pulse,                // Single-cycle puls
+    output reg [BIT_WIDTH - 1:0] sync_bus
+  );
+
+  reg [NUM_STAGES - 1: 0] en_sync_reg;  // Multi-stage synchronizer shift register
+  reg bus_enable_sync;                  // Synchronized version of bus_enable
+  reg pulse_enable_flop;                // Used for edge detection
+  wire enable_pulse_wire;
+  reg [BIT_WIDTH - 1: 0] mux_out;       // Holds either old data or new data depending on pulse
+  
+  // Flop synchronizer
+  always @(posedge dest_clk or negedge dest_reset_n)
+  begin
+    if (!dest_reset_n)
+    begin
+      en_sync_reg <= 0;
+    end
+    else
+    begin
+      {bus_enable_sync,en_sync_reg} <= {en_sync_reg[NUM_STAGES - 1:0],bus_enable};
+    end
+  end
+
+  // Pulse generator
+  always @(posedge dest_clk or negedge dest_reset_n)
+  begin
+    if (! dest_reset_n)
+    begin
+      pulse_enable_flop <= 'b0;
+    end
+    else
+    begin
+      pulse_enable_flop <= bus_enable_sync;
+    end
+  end
+
+  assign enable_pulse_wire = bus_enable_sync & !pulse_enable_flop;
+
+
+  // Multiplexer
+  always @(*)
+  begin
+    if (enable_pulse_wire)
+    begin
+      mux_out = unsync_bus;
+    end
+    else
+    begin
+      mux_out = sync_bus;
+    end
+  end
+
+  // outputs flop
+
+  always @(posedge dest_clk or negedge dest_reset_n)
+  begin
+    if (!dest_reset_n)
+    begin
+      enable_pulse <= 'b0;
+      sync_bus <= 'b0;
+    end
+    else
+    begin
+      sync_bus <= mux_out;
+      enable_pulse <= enable_pulse_wire;
+    end
+
+  end
+endmodule
+

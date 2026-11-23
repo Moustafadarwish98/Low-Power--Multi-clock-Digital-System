@@ -1,0 +1,20 @@
+Info:  Net Imp:/WORK/ALU_DATA_WIDTH8_OUT_WIDTH16_DW_div_uns_0/remainder[7] is undriven.
+Info:  Net Imp:/WORK/ALU_DATA_WIDTH8_OUT_WIDTH16_DW_div_uns_0/remainder[6] is undriven.
+Info:  Net Imp:/WORK/ALU_DATA_WIDTH8_OUT_WIDTH16_DW_div_uns_0/remainder[5] is undriven.
+Info:  Net Imp:/WORK/ALU_DATA_WIDTH8_OUT_WIDTH16_DW_div_uns_0/remainder[4] is undriven.
+Info:  Net Imp:/WORK/ALU_DATA_WIDTH8_OUT_WIDTH16_DW_div_uns_0/remainder[3] is undriven.
+Info:  Net Imp:/WORK/ALU_DATA_WIDTH8_OUT_WIDTH16_DW_div_uns_0/remainder[2] is undriven.
+Info:  Net Imp:/WORK/ALU_DATA_WIDTH8_OUT_WIDTH16_DW_div_uns_0/remainder[1] is undriven.
+Info:  Net Imp:/WORK/ALU_DATA_WIDTH8_OUT_WIDTH16_DW_div_uns_0/remainder[0] is undriven.
+Info:  Net Imp:/WORK/ALU_DATA_WIDTH8_OUT_WIDTH16_DW_div_uns_0/divide_by_0 is undriven.
+Info:  Net Imp:/WORK/ALU_DATA_WIDTH8_OUT_WIDTH16_DW01_sub_0/CO is undriven.
+Info:  Net Imp:/WORK/ALU_DATA_WIDTH8_OUT_WIDTH16_DW01_add_0/CO is undriven.
+Info:  Net Imp:/WORK/ALU_DATA_WIDTH8_OUT_WIDTH16_DW01_add_1/CO is undriven.
+Info:  guide_uniquify 98 (Line: 834)  Cannot find object "dut_Clock_Divider_RX/U24" in design 'SYS_TOP'.
+Info:  SVF Operation 98 (Line: 834) - uniquify.  Status: rejected
+Info:  guide_uniquify 98 (Line: 834)  Cannot find object "dut_TX_CLOCK_DIVIDER/U24" in design 'SYS_TOP'.
+Info:  guide_uniquify 98 (Line: 834)  Cannot find object "dut_Clock_Divider_RX/U23" in design 'SYS_TOP'.
+Info:  guide_uniquify 98 (Line: 834)  Cannot find object "dut_TX_CLOCK_DIVIDER/U23" in design 'SYS_TOP'.
+Info:  guide_uniquify 106 (Line: 877)  Cannot find object "dut_ALU/dp_cluster_0/mult_46" in design 'SYS_TOP'.
+Info:  Pre-verification of Ref:/WORK/ALU_DATA_WIDTH8_OUT_WIDTH16/div_48 SUCCEEDED.
+Info:  Pre-verification of Ref:/WORK/ALU_DATA_WIDTH8_OUT_WIDTH16/mult_46 SUCCEEDED.
